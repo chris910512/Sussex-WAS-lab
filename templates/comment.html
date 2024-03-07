@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+
+{% block title %}
+    Insert a comment
+{% endblock %}
+
+{% block content %}
+    <h4> Insert a comment: </h4>
+    {% load crispy_forms_tags %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ new_comment|crispy }}
+        <button type="submit" class="btn btn-primary">Submit Comment</button>
+        <button type="reset" class="btn btn-primary">Reset Form</button>
+    </form>
+
+    {% if user.is_authenticated %}
+    {% if cmnt_list %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in cmnt_list %}
+                    <tr>
+                        <td>{{ comment.name }}</td>
+                        <td>{{ comment.date }}</td>
+                        <td>{{ comment.comment }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+            <p>There are no comments for user: <em>{{ user.username }}</em></p>
+        {% endif %}
+    {% else %}
+        <p>Comment Store Application Homepage. Please login to start ...</p>
+    {% endif %}
+
+{% endblock %}
