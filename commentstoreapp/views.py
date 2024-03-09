@@ -3,8 +3,8 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.contrib.auth import logout
 from django.views.decorators.csrf import csrf_exempt
-from commentstoreapp.commentstore import CommentStore
 from commentstoreapp.forms import InsertNewComment
+from commentstoreapp.models import Comment
 
 from register.forms import RegisterForm
 from django.shortcuts import render, redirect
@@ -29,11 +29,10 @@ def comment_store(request):
         date = datetime.strptime(request.POST.get('visit_date'), '%d/%m/%Y').date()
         comment = request.POST.get('comment_str')
 
-        store = CommentStore();
-        store.insertcomment(name, date, comment)
+        t = Comment(name=name, visit_date=date, comment_str=comment)
+        t.save()
 
-        comments = store.commentlist.queue
-        return render(request, 'home.html', {'cmnt_list': comments, 'new_comment': form})
+        return render(request, 'home.html', {'cmnt_list': list(Comment.objects.all()), 'new_comment': form})
 
     else:
         return HttpResponse("Hello, Student. You're at the Comment Store Application.")
@@ -92,6 +91,4 @@ def insert_new_comment(request):
 
 
 def home(request):
-    store = CommentStore()
-    comments = store.commentlist.queue
-    return render(request, "home.html", {'cmnt_list': comments})
+    return render(request, "home.html", {'cmnt_list': list(Comment.objects.all())})
