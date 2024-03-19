@@ -1,19 +1,19 @@
 from datetime import datetime
 
-from django.http import HttpResponse
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_protect
+
 from commentstoreapp.forms import InsertNewComment
 from commentstoreapp.models import Comment
-
 from register.forms import RegisterForm
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib import messages
 
 
-@csrf_exempt
+@csrf_protect
 def comment_store(request):
     form = InsertNewComment()
 
